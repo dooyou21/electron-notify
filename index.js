@@ -127,6 +127,14 @@ function setConfig(customConfig) {
   calcDimensions()
 }
 
+function setDefaultWindowConfig(DefaultWindowConfig) {
+  config.DefaultWindowConfig = _.defaults(DefaultWindowConfig, config.DefaultWindowConfig)
+  config.DefaultWindowConfig.webPreferences = {
+    preload: path.join(__dirname, 'preload.js'),
+    allowDisplayingInsecureContent: true
+  }
+}
+
 function updateTemplatePath() {
   let templatePath = path.join(__dirname, 'notification.html')
   // Tricky stuff, sometimes this doesn't work,
@@ -486,6 +494,7 @@ function log() {
 
 module.exports.notify = notify
 module.exports.setConfig = setConfig
+module.exports.setDefaultWindowConfig = setDefaultWindowConfig
 module.exports.getTemplatePath = getTemplatePath
 module.exports.setTemplatePath = setTemplatePath
 module.exports.closeAll = closeAll
