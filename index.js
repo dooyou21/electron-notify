@@ -125,14 +125,12 @@ let config = {
 function setConfig(customConfig) {
   config = _.defaults(customConfig, config)
   calcDimensions()
+  return config
 }
 
-function setDefaultWindowConfig(DefaultWindowConfig) {
-  config.DefaultWindowConfig = _.defaults(DefaultWindowConfig, config.DefaultWindowConfig)
-  config.DefaultWindowConfig.webPreferences = {
-    preload: path.join(__dirname, 'preload.js'),
-    allowDisplayingInsecureContent: true
-  }
+function setDefaultWindowConfig(customConfig) {
+  config.defaultWindow = _.defaults(customConfig, config.defaultWindow)
+  return config.DefaultWindow
 }
 
 function updateTemplatePath() {
@@ -357,12 +355,14 @@ ipc.on('electron-notify-click', function (event, winId, notificationObj) {
   if (notificationObj.url) {
     electron.shell.openExternal(notificationObj.url)
   }
+
   let notificationWindow = BrowserWindow.fromId(winId)
   if (notificationWindow && notificationWindow.electronNotifyOnClickFunc) {
     let closeFunc = buildCloseNotification(notificationWindow, notificationObj)
     notificationWindow.electronNotifyOnClickFunc({
       event: 'click',
       id: notificationObj.id,
+      param: notificationObj.param,
       closeNotification: buildCloseNotificationSafely(closeFunc)
     })
     delete notificationWindow.electronNotifyOnClickFunc
