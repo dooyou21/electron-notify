@@ -5,13 +5,13 @@ const ipc = electron.ipcRenderer
 const winId = electron.remote.getCurrentWindow().id
 
 function setStyle(config) {
-  // Style it
-  let notiDoc = global.window.document
-  let container = notiDoc.getElementById('container')
-  let appIcon = notiDoc.getElementById('appIcon')
-  let image = notiDoc.getElementById('image')
-  let close = notiDoc.getElementById('close')
-  let message = notiDoc.getElementById('message')
+  // // Style it
+  // let notiDoc = global.window.document
+  // let container = notiDoc.getElementById('container')
+  // let appIcon = notiDoc.getElementById('appIcon')
+  // let image = notiDoc.getElementById('image')
+  // let close = notiDoc.getElementById('close')
+  // let message = notiDoc.getElementById('message')
   // Default style
   setStyleOnDomElement(config.defaultStyleContainer, container)
   // Size and radius
@@ -20,6 +20,7 @@ function setStyle(config) {
     width: config.width - 2 * config.borderRadius - 2 * config.defaultStyleContainer.padding,
     borderRadius: config.borderRadius + 'px'
   }
+
   setStyleOnDomElement(style, container)
   // Style appIcon or hide
   if (config.appIcon) {
@@ -30,12 +31,12 @@ function setStyle(config) {
       display: 'none'
     }, appIcon)
   }
-  // Style image
-  setStyleOnDomElement(config.defaultStyleImage, image)
-  // Style close button
-  setStyleOnDomElement(config.defaultStyleClose, close)
-  // Remove margin from text p
-  setStyleOnDomElement(config.defaultStyleText, message)
+  // // Style image
+  // setStyleOnDomElement(config.defaultStyleImage, image)
+  // // Style close button
+  // setStyleOnDomElement(config.defaultStyleClose, close)
+  // // Remove margin from text p
+  // setStyleOnDomElement(config.defaultStyleText, message)
 }
 
 function setContents(event, notificationObj) {
