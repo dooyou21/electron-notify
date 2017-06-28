@@ -60,13 +60,13 @@ function setContents(event, notificationObj) {
 
   let notiDoc = global.window.document
 
-  //appIcon
-  console.log(notificationObj.cat)
   let appIconDoc = notiDoc.getElementById('appIcon')
   if(notificationObj.cat === 'download') {
     appIconDoc.src = './img_attached.png'
+    setStyleOnDomElement({display: 'block'}, notiDoc.getElementById('progressbarBackground'))
   } else {
     appIconDoc.src = './flow_noti_icon.png'
+    setStyleOnDomElement({display: 'none'}, notiDoc.getElementById('progressbarBackground'))
   }
 
   // Title
