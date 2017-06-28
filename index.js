@@ -58,35 +58,25 @@ let config = {
   pathToModule: '',
   logging: true,
   defaultStyleContainer: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#ffffff',
     overflow: 'hidden',
     padding: 8,
-    border: '1px solid #CCC',
     fontFamily: 'Arial',
     fontSize: 12,
     position: 'relative',
     lineHeight: '15px'
   },
   defaultStyleAppIcon: {
-    overflow: 'hidden',
-    float: 'left',
-    height: 40,
-    width: 40,
-    marginRight: 10,
+    height: 58,
+    width: 58
   },
   defaultStyleImage: {
-    overflow: 'hidden',
-    float: 'right',
-    height: 40,
-    width: 40,
-    marginLeft: 10,
+    height: 58,
+    width: 58
   },
   defaultStyleClose: {
-    position: 'absolute',
-    top: 1,
-    right: 3,
-    fontSize: 11,
-    color: '#CCC'
+    top: 12,
+    right: 12,
   },
   defaultStyleText: {
     margin: 0,
