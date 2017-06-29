@@ -36,7 +36,7 @@ AnimationQueue.prototype.animate = function(object) {
   })
   .catch(function(err) {
     log('electron-notify encountered an error!')
-    log('Please submit the error stack and code samples to: https://github.com/hankbao/electron-notify/issues')
+    log('Please submit the error stack and code samples to: https://github.com/dooyou21/electron-notify/issues')
     log(err.stack)
   })
 }
@@ -61,6 +61,7 @@ let config = {
     backgroundColor: '#ffffff',
     overflow: 'hidden',
     padding: 8,
+    border: '1px solid rgba(66, 66, 68, 0.1)',
     fontFamily: 'Arial',
     fontSize: 12,
     position: 'relative',
@@ -93,6 +94,7 @@ let config = {
     acceptFirstMouse: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
       allowDisplayingInsecureContent: true
     }
   },
@@ -188,6 +190,7 @@ setupConfig()
 
 // Array of windows with currently showing notifications
 let activeNotifications = []
+let activeNotificationsId = []
 
 // Recycle windows
 let inactiveWindows = []
@@ -209,6 +212,7 @@ function notify(notification) {
   if (arguments.length === 1 && typeof notification === 'object') {
     // Use object instead of supplied parameters
     notification.id = latestID
+
     latestID++
     animationQueue.push({
       func: showNotification,
@@ -234,6 +238,7 @@ function showNotification(notificationObj) {
 
         // Add to activeNotifications
         activeNotifications.push(notificationWindow)
+        activeNotificationsId.push(notificationObj.id)
 
         // Display time per notification basis.
         let displayTime = notificationObj.displayTime ? notificationObj.displayTime : config.displayTime
@@ -311,6 +316,7 @@ function buildCloseNotification(notificationWindow, notificationObj, getTimeoutI
     // Recycle window
     let pos = activeNotifications.indexOf(notificationWindow)
     activeNotifications.splice(pos, 1)
+    activeNotificationsId.splice(pos, 1)
     inactiveWindows.push(notificationWindow)
 
     // Hide notification
@@ -358,6 +364,15 @@ ipc.on('electron-notify-click', function (event, winId, notificationObj) {
     delete notificationWindow.electronNotifyOnClickFunc
   }
 })
+
+// ipc.on('electron-notify-download-finished', function (event, winId) {
+//   for (let i = 0; i < animationQueue.queue.length; i++) {
+//     if(animationQueue.queue[i].id === winId) {
+//       console.log('!!!download finished!')
+//       break;
+//     }
+//   }
+// })
 
 /*
 * Checks for queued notifications and add them
@@ -473,6 +488,7 @@ function closeAll() {
   // Reset certain vars
   nextInsertPos = {}
   activeNotifications = []
+  activeNotificationsId = []
   inactiveWindows = []
 }
 
@@ -482,9 +498,26 @@ function log() {
   }
 }
 
+function updateNoti(id, data) {
+  let idx = activeNotificationsId.indexOf(id)
+  if(activeNotifications[idx]) {
+    if(typeof data === 'number') {
+      if (data == 0) {
+        return;
+      }
+      activeNotifications[idx].webContents.send('electron-notify-download-update', data)
+    } else if(typeof data === 'string' && data === 'cancelled') {
+      activeNotifications[idx].webContents.send('electron-notify-download-update', -1)
+    }
+  } else {
+    //표현되지않는것이니..업데이트 할 수가 없어
+  }
+}
+
 module.exports.notify = notify
 module.exports.setConfig = setConfig
 module.exports.setDefaultWindowConfig = setDefaultWindowConfig
 module.exports.getTemplatePath = getTemplatePath
 module.exports.setTemplatePath = setTemplatePath
 module.exports.closeAll = closeAll
+module.exports.updateNoti = updateNoti

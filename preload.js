@@ -1,8 +1,11 @@
 'use strict'
 
+const _ = require('lodash')
 const electron = require('electron')
 const ipc = electron.ipcRenderer
 const winId = electron.remote.getCurrentWindow().id
+
+let notiObj = null
 
 function setStyle(config) {
   // Style it
@@ -42,6 +45,9 @@ function setStyle(config) {
 }
 
 function setContents(event, notificationObj) {
+
+  notiObj = _.cloneDeep(notificationObj)
+
   // sound
   if (notificationObj.sound) {
     // Check if file is accessible
@@ -123,9 +129,23 @@ function reset() {
   closeButton.parentNode.replaceChild(newCloseButton, closeButton)
 }
 
+function updateDownloadPercent(percent) {
+  if (percent < 0) {
+    ipc.send('electron-notify-close', winId, notificationObj)
+  } else {
+    setStyleOnDomElement({width: percent + '%'}, global.window.document.getElementById('progressNow'))
+    if(percent == 100) {
+      ipc.send('electron-notify-close', winId, notiObj)
+    }
+  }
+}
+
 ipc.on('electron-notify-set-contents', setContents)
 ipc.on('electron-notify-load-config', loadConfig)
 ipc.on('electron-notify-reset', reset)
+ipc.on('electron-notify-download-update', (event, arg) => {
+  updateDownloadPercent(arg)
+})
 
 function log() {
   console.log.apply(console, arguments)
