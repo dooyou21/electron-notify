@@ -363,7 +363,6 @@ ipc.on('electron-notify-click', function (event, winId, notificationObj) {
     notificationWindow.electronNotifyOnClickFunc({
       event: 'click',
       id: notificationObj.id,
-      param: notificationObj.param,
       closeNotification: buildCloseNotificationSafely(closeFunc)
     })
     delete notificationWindow.electronNotifyOnClickFunc
