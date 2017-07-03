@@ -118,6 +118,7 @@ function loadConfig(event, conf) {
 }
 
 function reset() {
+  setStyleOnDomElement({width: '1%'}, global.window.document.getElementById('progressNow'))
   let notiDoc = global.window.document
   let container = notiDoc.getElementById('container')
   let closeButton = notiDoc.getElementById('close')

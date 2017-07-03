@@ -365,15 +365,6 @@ ipc.on('electron-notify-click', function (event, winId, notificationObj) {
   }
 })
 
-// ipc.on('electron-notify-download-finished', function (event, winId) {
-//   for (let i = 0; i < animationQueue.queue.length; i++) {
-//     if(animationQueue.queue[i].id === winId) {
-//       console.log('!!!download finished!')
-//       break;
-//     }
-//   }
-// })
-
 /*
 * Checks for queued notifications and add them
 * to AnimationQueue if possible
@@ -510,7 +501,7 @@ function updateNoti(id, data) {
       activeNotifications[idx].webContents.send('electron-notify-download-update', -1)
     }
   } else {
-    //표현되지않는것이니..업데이트 할 수가 없어
+    //표현되지않는것이니..업데이트 안함.. 할 수가 없어
   }
 }
 
