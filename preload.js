@@ -81,6 +81,7 @@ function setContents(event, notificationObj) {
   // message
   let messageDoc = notiDoc.getElementById('message')
   messageDoc.innerHTML = notificationObj.text || ''
+
   // Image
   let imageDoc = notiDoc.getElementById('image')
   if (notificationObj.image) {
@@ -89,11 +90,15 @@ function setContents(event, notificationObj) {
     setStyleOnDomElement({ display: 'none'}, imageDoc)
   }
 
+  //setSize
+  let size = notiDoc.getElementById('size')
+  size.innerHTML = notificationObj.size || ''
+
   // Close button
   let closeButton = notiDoc.getElementById('close')
   closeButton.addEventListener('click', function(event) {
     event.stopPropagation()
-    ipc.send('electron-notify-close', winId, notificationObj)
+    ipc.send('electron-notify-btnClose', winId, notificationObj)
   })
 
   // URL
@@ -119,6 +124,8 @@ function loadConfig(event, conf) {
 
 function reset() {
   setStyleOnDomElement({width: '1%'}, global.window.document.getElementById('progressNow'))
+  global.window.document.getElementById('progressNow').text('')
+  global.window.document.getElementById('size').text('')
   let notiDoc = global.window.document
   let container = notiDoc.getElementById('container')
   let closeButton = notiDoc.getElementById('close')

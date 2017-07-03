@@ -347,6 +347,11 @@ ipc.on('electron-notify-close', function (event, winId, notificationObj) {
   buildCloseNotificationSafely(closeFunc)('close')
 })
 
+ipc.on('electron-notify-btnClose', function (event, winId, notificationObj) {
+  let closeFunc = buildCloseNotification(BrowserWindow.fromId(winId), notificationObj)
+  buildCloseNotificationSafely(closeFunc)('btnClose')
+})
+
 ipc.on('electron-notify-click', function (event, winId, notificationObj) {
   if (notificationObj.url) {
     electron.shell.openExternal(notificationObj.url)
