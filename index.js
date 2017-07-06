@@ -298,13 +298,27 @@ function buildCloseNotification(notificationWindow, notificationObj, getTimeoutI
       closedNotifications[notificationObj.id] = true
     }
 
-    if (notificationWindow.electronNotifyOnCloseFunc) {
-      notificationWindow.electronNotifyOnCloseFunc({
-        event: event,
-        id: notificationObj.id
-      })
-      delete notificationWindow.electronNotifyOnCloseFunc
+    if(event == 'btnClose') {
+      if (notificationWindow.electronNotifyOnCloseFunc) {
+        notificationWindow.electronNotifyOnCloseFunc({
+          event: 'close',
+          id: notificationObj.id,
+          eventDetail: 'btnClose'
+        })
+        delete notificationWindow.electronNotifyOnCloseFunc
+      }
+    } else {
+      if (notificationWindow.electronNotifyOnCloseFunc) {
+        notificationWindow.electronNotifyOnCloseFunc({
+          event: event,
+          id: notificationObj.id
+        })
+        delete notificationWindow.electronNotifyOnCloseFunc
+      }
     }
+
+    // Hide notification
+    notificationWindow.hide()
 
     // reset content
     notificationWindow.webContents.send('electron-notify-reset')
@@ -319,8 +333,6 @@ function buildCloseNotification(notificationWindow, notificationObj, getTimeoutI
     activeNotificationsId.splice(pos, 1)
     inactiveWindows.push(notificationWindow)
 
-    // Hide notification
-    notificationWindow.hide()
 
     checkForQueuedNotifications()
 
@@ -334,7 +346,7 @@ function buildCloseNotification(notificationWindow, notificationObj, getTimeoutI
 function buildCloseNotificationSafely(closeFunc) {
   return function(reason) {
     if (reason === undefined)
-    reason = 'closedByAPI'
+      reason = 'closedByAPI'
     animationQueue.push({
       func: closeFunc,
       args: [ reason ]

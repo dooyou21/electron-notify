@@ -96,16 +96,16 @@ function setContents(event, notificationObj) {
 
   // Close button
   let closeButton = notiDoc.getElementById('close')
-  closeButton.addEventListener('click', function(event) {
+  closeButton.onclick = function(event) {
     event.stopPropagation()
     ipc.send('electron-notify-btnClose', winId, notificationObj)
-  })
+  }
 
   // URL
   let container = notiDoc.getElementById('container')
-  container.addEventListener('click', function() {
+  container.onclick = function() {
     ipc.send('electron-notify-click', winId, notificationObj)
-  })
+  }
 }
 
 function setStyleOnDomElement(styleObj, domElement) {
@@ -131,6 +131,8 @@ function reset() {
   let closeButton = notiDoc.getElementById('close')
 
   // Remove event listener
+  closeButton.onclick = null;
+
   let newContainer = container.cloneNode(true)
   container.parentNode.replaceChild(newContainer, container)
   let newCloseButton = closeButton.cloneNode(true)
